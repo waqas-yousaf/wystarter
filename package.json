@@ -1,0 +1,27 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vp build",
+        "dev": "vp dev",
+        "lint": "NODE_OPTIONS='--experimental-strip-types' vp fmt resources/",
+        "test:lint": "NODE_OPTIONS='--experimental-strip-types' vp fmt --check resources/"
+    },
+    "devDependencies": {
+        "@tailwindcss/vite": "^4.3.1",
+        "concurrently": "^10.0.3",
+        "laravel-vite-plugin": "^3.1.0",
+        "npm-check-updates": "^22.2.8",
+        "playwright": "^1.61.1",
+        "tailwindcss": "^4.3.1",
+        "vite": "npm:@voidzero-dev/vite-plus-core@latest",
+        "vite-plus": "latest"
+    },
+    "overrides": {
+        "vite": "npm:@voidzero-dev/vite-plus-core@latest",
+        "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
+    },
+    "dependencies": {
+        "quill": "^2.0.3"
+    }
+}

@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Requests;
+
+use App\Enums\BlogPostStatus;
+use App\Models\BlogPost;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+
+final class UpdateBlogPostRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return $this->user()->can('update', $this->route('blog_post'));
+    }
+
+    /** @return array<string, mixed> */
+    public function rules(): array
+    {
+        return [
+            'title' => ['required', 'string', 'max:150'],
+            'content' => ['nullable', 'string'],
+            'excerpt' => ['nullable', 'string', 'max:500'],
+            'featured_image' => ['nullable', 'image', 'max:2048'],
+            'status' => ['required', new Enum(BlogPostStatus::class)],
+            'tags' => ['nullable', 'string'],
+        ];
+    }
+}
