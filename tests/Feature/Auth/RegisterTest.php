@@ -40,7 +40,7 @@ test('users can register with valid data', function (): void {
         'email' => 'test@example.com',
         'password' => 'password',
         'password_confirmation' => 'password',
-    ])->assertRedirect(route('admin.dashboard'));
+    ])->assertRedirect(route('admin.main'));
 
     $this->assertAuthenticated();
     $this->assertDatabaseHas('users', ['email' => 'test@example.com']);

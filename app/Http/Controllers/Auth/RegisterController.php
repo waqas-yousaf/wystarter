@@ -48,6 +48,6 @@ final class RegisterController
 
         Auth::login($user);
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('admin.main');
     }
 }

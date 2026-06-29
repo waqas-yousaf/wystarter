@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\BlogPostStatus;
-use App\Models\BlogPost;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 final class UpdateBlogPostRequest extends FormRequest
@@ -26,6 +26,7 @@ final class UpdateBlogPostRequest extends FormRequest
             'featured_image' => ['nullable', 'image', 'max:2048'],
             'status' => ['required', new Enum(BlogPostStatus::class)],
             'tags' => ['nullable', 'string'],
+            'author_id' => ['nullable', 'uuid', Rule::exists('users', 'id')],
         ];
     }
 }

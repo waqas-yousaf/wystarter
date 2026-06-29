@@ -9,6 +9,7 @@ use App\Http\Requests\StoreBlogPostRequest;
 use App\Http\Requests\UpdateBlogPostRequest;
 use App\Models\BlogPost;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
@@ -38,8 +39,9 @@ final class BlogPostController
         $this->authorize('create', BlogPost::class);
 
         $statuses = BlogPostStatus::cases();
+        $users = auth()->user()?->hasRole('admin') ? User::orderBy('name')->get() : collect();
 
-        return view('admin.blog-posts.create', compact('statuses'));
+        return view('admin.blog-posts.create', compact('statuses', 'users'));
     }
 
     public function store(StoreBlogPostRequest $request): RedirectResponse
@@ -55,7 +57,9 @@ final class BlogPostController
                 ? $request->file('featured_image')->store('blog/images', 'public')
                 : null,
             'status' => $validated['status'],
-            'author_id' => auth()->id(),
+            'author_id' => auth()->user()?->hasRole('admin') && ! empty($validated['author_id'])
+                ? $validated['author_id']
+                : auth()->id(),
             'published_at' => $validated['status'] === BlogPostStatus::Published->value
                 ? now()
                 : null,
@@ -74,8 +78,9 @@ final class BlogPostController
 
         $blogPost->load('tags');
         $statuses = BlogPostStatus::cases();
+        $users = auth()->user()?->hasRole('admin') ? User::orderBy('name')->get() : collect();
 
-        return view('admin.blog-posts.edit', compact('blogPost', 'statuses'));
+        return view('admin.blog-posts.edit', compact('blogPost', 'statuses', 'users'));
     }
 
     public function update(UpdateBlogPostRequest $request, BlogPost $blogPost): RedirectResponse
@@ -93,6 +98,9 @@ final class BlogPostController
             'excerpt' => $validated['excerpt'] ?? null,
             'featured_image' => $featuredImage,
             'status' => $validated['status'],
+            'author_id' => auth()->user()?->hasRole('admin') && ! empty($validated['author_id'])
+                ? $validated['author_id']
+                : $blogPost->author_id,
             'published_at' => $validated['status'] === BlogPostStatus::Published->value
                 ? ($blogPost->published_at ?? now())
                 : null,
@@ -124,7 +132,7 @@ final class BlogPostController
         }
 
         return collect(explode(',', $tagInput))
-            ->map(fn (string $name): string => Str::lower(trim($name)))
+            ->map(fn (string $name): string => Str::lower(mb_trim($name)))
             ->filter()
             ->unique()
             ->map(function (string $name): int {

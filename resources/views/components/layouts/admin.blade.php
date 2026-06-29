@@ -4,9 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name') }} Admin — {{ $title ?? 'Dashboard' }}</title>
+    <x-seo :title="(($title ?? 'Dashboard') . ' — ' . config('app.name') . ' Admin')" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
+    @stack('head')
 </head>
 <body class="min-h-screen bg-gray-100">
     <nav class="bg-white shadow-sm border-b border-gray-200">
@@ -17,8 +18,8 @@
                         {{ config('app.name') }} <span class="text-indigo-600">Admin</span>
                     </span>
                     <div class="flex gap-4">
-                        <a href="{{ route('admin.dashboard') }}"
-                           class="text-sm font-medium {{ request()->routeIs('admin.dashboard') ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900' }}">
+                        <a href="{{ route('admin.main') }}"
+                           class="text-sm font-medium {{ request()->routeIs('admin.main') ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900' }}">
                             Dashboard
                         </a>
                         <a href="{{ route('admin.users.index') }}"
@@ -29,6 +30,20 @@
                            class="text-sm font-medium {{ request()->routeIs('admin.blog-posts.*') ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900' }}">
                             Blog
                         </a>
+                        <a href="{{ route('admin.pages.index') }}"
+                           class="text-sm font-medium {{ request()->routeIs('admin.pages.*') ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900' }}">
+                            Pages
+                        </a>
+                        <a href="{{ route('admin.settings.index') }}"
+                           class="text-sm font-medium {{ request()->routeIs('admin.settings.*') ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900' }}">
+                            Settings
+                        </a>
+                        @feature('ecommerce_enabled')
+                            <a href="{{ route('admin.shop.products.index') }}"
+                               class="text-sm font-medium {{ request()->routeIs('admin.shop.*') ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900' }}">
+                                Shop
+                            </a>
+                        @endfeature
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
@@ -63,5 +78,6 @@
 
         {{ $slot }}
     </main>
+    @stack('scripts')
 </body>
 </html>

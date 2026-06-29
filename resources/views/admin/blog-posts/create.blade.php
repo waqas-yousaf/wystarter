@@ -86,6 +86,22 @@
                            placeholder="laravel, php, tutorial"
                            class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                 </div>
+
+                {{-- Author (admin only) --}}
+                @if ($users->isNotEmpty())
+                    <div class="bg-white rounded-xl border border-gray-200 p-4">
+                        <h3 class="text-sm font-semibold text-gray-900 mb-1">Author</h3>
+                        <select id="author_id" name="author_id"
+                                class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}"
+                                        @selected(old('author_id', auth()->id()) === $user->id)>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
             </div>
         </div>
     </form>

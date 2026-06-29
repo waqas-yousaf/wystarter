@@ -230,3 +230,52 @@ test('author cannot delete another authors post', function (): void {
 
     $this->assertModelExists($post);
 });
+
+// Author selection
+test('admin can create a post assigned to another user', function (): void {
+    $admin = User::factory()->admin()->create();
+    $targetAuthor = User::factory()->create();
+
+    $this->actingAs($admin)
+        ->post(route('admin.blog-posts.store'), [
+            'title' => 'Post For Another Author',
+            'status' => BlogPostStatus::Draft->value,
+            'author_id' => $targetAuthor->id,
+        ])
+        ->assertRedirect(route('admin.blog-posts.index'));
+
+    $post = BlogPost::where('title', 'Post For Another Author')->firstOrFail();
+    expect($post->author_id)->toBe($targetAuthor->id);
+});
+
+test('admin can change the author of an existing post', function (): void {
+    $admin = User::factory()->admin()->create();
+    $newAuthor = User::factory()->create();
+    $post = BlogPost::factory()->create(['author_id' => $admin->id]);
+
+    $this->actingAs($admin)
+        ->put(route('admin.blog-posts.update', $post), [
+            'title' => $post->title,
+            'status' => BlogPostStatus::Draft->value,
+            'author_id' => $newAuthor->id,
+        ])
+        ->assertRedirect(route('admin.blog-posts.index'));
+
+    expect($post->fresh()->author_id)->toBe($newAuthor->id);
+});
+
+test('author cannot assign a post to another user', function (): void {
+    $author = User::factory()->create()->assignRole('author');
+    $otherUser = User::factory()->create();
+    $post = BlogPost::factory()->create(['author_id' => $author->id]);
+
+    $this->actingAs($author)
+        ->put(route('admin.blog-posts.update', $post), [
+            'title' => $post->title,
+            'status' => BlogPostStatus::Draft->value,
+            'author_id' => $otherUser->id,
+        ])
+        ->assertRedirect(route('admin.blog-posts.index'));
+
+    expect($post->fresh()->author_id)->toBe($author->id);
+});

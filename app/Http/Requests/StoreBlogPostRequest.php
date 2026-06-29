@@ -26,6 +26,7 @@ final class StoreBlogPostRequest extends FormRequest
             'featured_image' => ['nullable', 'image', 'max:2048'],
             'status' => ['required', new Enum(BlogPostStatus::class)],
             'tags' => ['nullable', 'string'],
+            'author_id' => ['nullable', 'uuid', Rule::exists('users', 'id')],
         ];
     }
 }

@@ -8,7 +8,9 @@
       "PowerShell(Move-Item \"d:\\\\Projects\\\\wystarter\\\\resources\\\\views\\\\layouts\\\\admin.blade.php\" \"d:\\\\Projects\\\\wystarter\\\\resources\\\\views\\\\components\\\\layouts\\\\admin.blade.php\")",
       "Bash(xargs grep -l \"FormRequest\\\\|Request\")",
       "Read(//d/Projects/wscharter/app/Providers/**)",
-      "PowerShell(cd d:\\\\Projects\\\\wystarter; php artisan route:list 2>&1; echo \"---\"; php -r \"require 'vendor/autoload.php'; try { include 'routes/api.php'; echo 'api ok'; } catch \\(Exception \\\\$e\\) { echo \\\\$e->getMessage\\(\\); }\")"
+      "PowerShell(cd d:\\\\Projects\\\\wystarter; php artisan route:list 2>&1; echo \"---\"; php -r \"require 'vendor/autoload.php'; try { include 'routes/api.php'; echo 'api ok'; } catch \\(Exception \\\\$e\\) { echo \\\\$e->getMessage\\(\\); }\")",
+      "Bash(php artisan *)",
+      "Bash(vendor/bin/pint --dirty --format agent)"
     ]
   }
 }

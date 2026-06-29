@@ -17,6 +17,6 @@ final class DashboardController
             'recent_users' => User::with('roles')->latest()->limit(5)->get(),
         ];
 
-        return view('admin.dashboard', compact('stats'));
+        return view('admin.main', compact('stats'));
     }
 }

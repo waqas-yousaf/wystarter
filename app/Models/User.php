@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Carbon\CarbonInterface;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,7 +28,7 @@ use Spatie\Permission\Traits\HasRoles;
     'password',
     'remember_token',
 ])]
-final class User extends Authenticatable
+final class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
@@ -35,6 +36,11 @@ final class User extends Authenticatable
     use HasRoles;
     use HasUuids;
     use Notifiable;
+
+    public function mustVerifyEmail(): bool
+    {
+        return (bool) config('features.email_verification');
+    }
 
     /**
      * @return array<string, string>

@@ -99,9 +99,27 @@
                            class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                 </div>
 
+                {{-- Author --}}
+                @if ($users->isNotEmpty())
+                    <div class="bg-white rounded-xl border border-gray-200 p-4">
+                        <h3 class="text-sm font-semibold text-gray-900 mb-1">Author</h3>
+                        <select id="author_id" name="author_id"
+                                class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}"
+                                        @selected(old('author_id', $blogPost->author_id) === $user->id)>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
+
                 {{-- Meta --}}
                 <div class="bg-white rounded-xl border border-gray-200 p-4 text-xs text-gray-500 space-y-1">
-                    <p>Author: <span class="font-medium text-gray-700">{{ $blogPost->author->name }}</span></p>
+                    @if ($users->isEmpty())
+                        <p>Author: <span class="font-medium text-gray-700">{{ $blogPost->author->name }}</span></p>
+                    @endif
                     <p>Created: {{ $blogPost->created_at->format('M j, Y H:i') }}</p>
                     <p>Updated: {{ $blogPost->updated_at->format('M j, Y H:i') }}</p>
                 </div>
